@@ -1,0 +1,1113 @@
+<html>
+<!-- 大萌专业翻车  -->
+
+<head>
+  <title>Mitosis-Plus Firmware Builder v0.1</title>
+  <link href="/favicon.ico" rel="icon" type="image/x-icon" />
+  <!-- 我也略懂 ng2,react,vue... 但是这种大项目，老夫还是操起jQuery，就是干！  -->
+  <script src="/static/js/libs/jquery-3.2.1.min.js"></script>
+  <script src="/static/js/libs/yetii-min.js"></script>
+  <script src="/static/keycode.js"></script>
+
+
+  <script>
+    function makeJson() {
+      var json = [];
+      var layer0 = [];
+      var layer1 = [];
+      var layer2 = [];
+      var layer3 = [];
+      var layer4 = [];
+      var row = {}
+      var _this = "";
+
+      $("#tab1 svg g.keycap").each(function () {
+        _this = $(this);
+        row = { x: _this.data("keymapx"), y: _this.data("keymapy"), keycode: _this.attr("data-keycode"), display: _this.children("text").text() };
+        layer0.push(row)
+      //  console.log("L0:x-"+_this.data("keymapx")+" y-"+_this.data("keymapy")+" keycode:"+_this.attr("data-keycode")+"dis:"+_this.children("text").text())
+      });
+      $("#tab2 svg g.keycap").each(function () {
+        _this = $(this);
+        row = { x: _this.data("keymapx"), y: _this.data("keymapy"), keycode: _this.attr("data-keycode"), display: _this.children("text").text() };
+        layer1.push(row)
+       
+      });
+      $("#tab3 svg g.keycap").each(function () {
+        _this = $(this);
+        row = { x: _this.data("keymapx"), y: _this.data("keymapy"), keycode: _this.attr("data-keycode"), display: _this.children("text").text() };
+        layer2.push(row)
+       
+      });
+      $("#tab4 svg g.keycap").each(function () {
+        _this = $(this);
+        row = { x: _this.data("keymapx"), y: _this.data("keymapy"), keycode: _this.attr("data-keycode"), display: _this.children("text").text() };
+        layer3.push(row)
+      });
+      $("#tab5 svg g.keycap").each(function () {
+        _this = $(this);
+        row = { x: _this.data("keymapx"), y: _this.data("keymapy"), keycode: _this.attr("data-keycode"), display: _this.children("text").text() };
+        layer4.push(row)
+      });
+ 
+      json = { "keyboard": "mitosis-plus", "version": "1.0", "layer0": layer0, "layer1": layer1, "layer2": layer2, "layer3": layer3, "layer4": layer4, }
+
+      var jsonStr = JSON.stringify(json);
+
+      $("#json1").val(jsonStr);
+     // document.getElementById("json1").innerHTML = jsonStr;
+      ckeymapL0 = "";
+      for (var i = 0; i < 5; i++) {
+        ckeymapL0 = ckeymapL0 + "{"
+        for (var j = 0; j < 18; j++) {
+          if (j == 0) {
+            ckeymapL0 = ckeymapL0 + keymapL0[i][j];
+          } else {
+            ckeymapL0 = ckeymapL0 + "," + keymapL0[i][j];
+          }
+        }
+        ckeymapL0 = ckeymapL0 + "}, \n"
+      }
+      ckeymapL1 = "";
+      for (var i = 0; i < 5; i++) {
+        ckeymapL1 = ckeymapL1 + "{"
+        for (var j = 0; j < 18; j++) {
+          if (j == 0) {
+            ckeymapL1 = ckeymapL1 + keymapL1[i][j];
+          } else {
+            ckeymapL1 = ckeymapL1 + "," + keymapL1[i][j];
+          }
+        }
+        ckeymapL1 = ckeymapL1 + "}, \n"
+      }
+      ckeymapL2 = "";
+      for (var i = 0; i < 5; i++) {
+        ckeymapL2 = ckeymapL2 + "{"
+        for (var j = 0; j < 18; j++) {
+          if (j == 0) {
+            ckeymapL2 = ckeymapL2 + keymapL2[i][j];
+          } else {
+            ckeymapL2 = ckeymapL2 + "," + keymapL2[i][j];
+          }
+        }
+        ckeymapL2 = ckeymapL2 + "}, \n"
+      }
+      ckeymapL3 = "";
+      for (var i = 0; i < 5; i++) {
+        ckeymapL3 = ckeymapL3 + "{"
+        for (var j = 0; j < 18; j++) {
+          if (j == 0) {
+            ckeymapL3 = ckeymapL3 + keymapL3[i][j];
+          } else {
+            ckeymapL3 = ckeymapL3 + "," + keymapL3[i][j];
+          }
+        }
+        ckeymapL3 = ckeymapL3 + "}, \n"
+      }
+      ckeymapL4 = "";
+      for (var i = 0; i < 5; i++) {
+        ckeymapL4 = ckeymapL4 + "{"
+        for (var j = 0; j < 18; j++) {
+          if (j == 0) {
+            ckeymapL4 = ckeymapL4 + keymapL4[i][j];
+          } else {
+            ckeymapL4 = ckeymapL4 + "," + keymapL4[i][j];
+          }
+        }
+        ckeymapL4 = ckeymapL4 + "}, \n"
+      }
+      document.getElementById("form_0").innerHTML = ckeymapL0;
+      document.getElementById("form_1").innerHTML = ckeymapL1;
+      document.getElementById("form_2").innerHTML = ckeymapL2;
+      document.getElementById("form_3").innerHTML = ckeymapL3;
+      document.getElementById("form_4").innerHTML = ckeymapL4;
+    };
+
+
+    $().ready(function () {
+      cLayer = 0; //current layer
+      keymapL0 = "";
+      keymapL1 = "";
+      keymapL2 = "";
+      keymapL3 = "";
+      keymapL4 = "";
+      keymapL5 = "";
+      keymapx = 0;
+      keymapy = 0;
+      ckeymapL0 = "";
+      ckeymapL1 = "";
+      ckeymapL2 = "";
+      ckeymapL3 = "";
+      ckeymapL4 = "";
+
+      $("#tab2").html($("#tab1").html());
+      $("#tab3").html($("#tab1").html());
+      $("#tab4").html($("#tab1").html());
+      $("#tab5").html($("#tab1").html());
+
+      var tabber1 = new Yetii({
+        id: 'tab-container-1',
+        callback: function customfunction(tabnumber) {
+          if (tabnumber == 1) cLayer = 0;
+          if (tabnumber == 2) cLayer = 1;
+          if (tabnumber == 3) cLayer = 2;
+          if (tabnumber == 4) cLayer = 3;
+          if (tabnumber == 5) cLayer = 4;
+          if (tabnumber == 6) makeJson();
+
+        }
+      });
+
+      var keymap_simple_NO = new Array();
+      for (var i = 0; i < 5; i++) {
+        keymap_simple_NO[i] = new Array();
+        for (var j = 0; j < 18; j++) {
+          keymap_simple_NO[i][j] = "KC_NO";
+        }
+      }
+      var keymap_TRNS = new Array();
+      for (var i = 0; i < 5; i++) {
+        keymap_TRNS[i] = new Array();
+        for (var j = 0; j < 18; j++) {
+          keymap_TRNS[i][j] = "KC_TRNS";
+        }
+      }
+
+      keymapL0 = keymap_simple_NO;
+      keymapL1 = keymap_TRNS;
+      keymapL2 = keymap_TRNS;
+      keymapL3 = keymap_TRNS;
+      keymapL4 = keymap_TRNS;
+      keymapL5 = keymap_TRNS;
+      $("#tab1 svg g.keycap").each(function () {
+        $(this).attr("data-keycode", keymapL0[$(this).data("keymapy")][$(this).data("keymapx")])
+      });
+      $("#tab2 svg g.keycap").each(function () {
+        $(this).attr("data-keycode", keymapL1[$(this).data("keymapy")][$(this).data("keymapx")])
+      });
+      $("#tab3 svg g.keycap").each(function () {
+        $(this).attr("data-keycode", keymapL2[$(this).data("keymapy")][$(this).data("keymapx")])
+      });
+      $("#tab4 svg g.keycap").each(function () {
+        $(this).attr("data-keycode", keymapL3[$(this).data("keymapy")][$(this).data("keymapx")])
+      });
+      $("#tab5 svg g.keycap").each(function () {
+        $(this).attr("data-keycode", keymapL4[$(this).data("keymapy")][$(this).data("keymapx")])
+      });
+
+
+
+      for (i = 0; i < keycode.length; i++) {
+        $('#keycode-select').append("<option value='" + keycode[i].code + "' dis='" + keycode[i].display + "'>" + keycode[i].alt + "</option>")
+      }
+
+      
+
+      $("svg g.keycap").children().bind("click", function () {
+        $(".selected").removeClass("selected");
+        var _this = $(this).parent();
+        _this.addClass("selected");
+
+
+        keymapx = _this.data("keymapx");
+        keymapy = _this.data("keymapy");
+
+
+        var prevCode = _this.attr("data-keycode");
+
+        if (typeof (prevCode) != "undefined") {
+          $('#keycode-select').val(prevCode);
+          $("#keycode-edit").val(prevCode);
+        } else {
+          $('#keycode-select').val("KC_NO");
+          $("#keycode-edit").val("KC_NO");
+        }
+        $("#select-form").show();
+      
+      });
+
+
+      $('#keycode-select').change(function () {
+        var code = $("#keycode-select").val();
+        $("#keycode-edit").val(code);
+      });
+
+
+      $("#set-keycode").bind("click", function () {
+        var code = $("#keycode-select").val();
+        var keyDis = $("#keycode-select option:selected").attr("dis");
+        if (cLayer == 0) { keymapL0[keymapy][keymapx] = $("#keycode-edit").val(); }
+        if (cLayer == 1) { keymapL1[keymapy][keymapx] = $("#keycode-edit").val(); }
+        if (cLayer == 2) { keymapL2[keymapy][keymapx] = $("#keycode-edit").val(); }
+        if (cLayer == 3) { keymapL3[keymapy][keymapx] = $("#keycode-edit").val(); }
+        if (cLayer == 4) { keymapL4[keymapy][keymapx] = $("#keycode-edit").val(); }
+
+        $(".selected").attr("data-keycode", $("#keycode-edit").val());
+        $(".selected").children("text").text(keyDis);
+        $("#select-form").hide();
+        $(".selected").removeClass("selected");
+        
+      });
+
+
+      $("#LT input").bind("click", function () {
+        var val = $(this).val();
+        var code = $("#keycode-select").val();
+        if (val == "LT0") { code = "LT(0," + code + ")" }
+        if (val == "LT1") { code = "LT(1," + code + ")" }
+        if (val == "LT2") { code = "LT(2," + code + ")" }
+        if (val == "LT3") { code = "LT(3," + code + ")" }
+        if (val == "LT4") { code = "LT(4," + code + ")" }
+        $("#keycode-edit").val(code);
+      })
+
+      $("#build").bind("click", function () {
+        console.log(ckeymapL0)
+        $.post('/make/mitosis-plus', { 'layer0': ckeymapL0, 'layer1': ckeymapL1, 'layer2': ckeymapL2, 'layer3': ckeymapL3, 'layer4': ckeymapL4 });
+
+      });
+
+
+
+
+
+
+
+      $("#json1").change(function () {
+
+        var jsonStr = document.getElementById('json1').value
+        json = JSON.parse(jsonStr);
+        for (var i = 0; i < json.layer0.length; i++) {
+          find = "#tab1 g.keycap[data-keymapx=" + json.layer0[i].x + "][data-keymapy=" + json.layer0[i].y + "]";
+          $(find).attr("data-keycode", json.layer0[i].keycode);
+          $(find).children("text").text(json.layer0[i].display)
+          keymapL0[json.layer0[i].y][json.layer0[i].x] = json.layer0[i].keycode;
+
+        }
+
+        for (var i = 0; i < json.layer1.length; i++) {
+          find = "#tab2 g.keycap[data-keymapx=" + json.layer1[i].x + "][data-keymapy=" + json.layer1[i].y + "]";
+          $(find).attr("data-keycode", json.layer1[i].keycode);
+          $(find).children("text").text(json.layer1[i].display)
+          keymapL1[json.layer1[i].y][json.layer1[i].x] = json.layer1[i].keycode;
+
+        }
+
+        for (var i = 0; i < json.layer2.length; i++) {
+          find = "#tab3 g.keycap[data-keymapx=" + json.layer2[i].x + "][data-keymapy=" + json.layer2[i].y + "]";
+          $(find).attr("data-keycode", json.layer2[i].keycode);
+          $(find).children("text").text(json.layer2[i].display)
+          keymapL2[json.layer2[i].y][json.layer2[i].x] = json.layer2[i].keycode;
+
+        }
+
+        for (var i = 0; i < json.layer3.length; i++) {
+          find = "#tab4 g.keycap[data-keymapx=" + json.layer3[i].x + "][data-keymapy=" + json.layer3[i].y + "]";
+          $(find).attr("data-keycode", json.layer3[i].keycode);
+          $(find).children("text").text(json.layer3[i].display)
+          keymapL3[json.layer3[i].y][json.layer3[i].x] = json.layer3[i].keycode;
+        }
+
+        for (var i = 0; i < json.layer4.length; i++) {
+          find = "#tab5 g.keycap[data-keymapx=" + json.layer4[i].x + "][data-keymapy=" + json.layer4[i].y + "]";
+          $(find).attr("data-keycode", json.layer4[i].keycode);
+          $(find).children("text").text(json.layer4[i].display)
+          keymapL4[json.layer4[i].y][json.layer4[i].x] = json.layer4[i].keycode;
+        }
+
+
+
+
+
+      })
+        var jsonStr = document.getElementById('json1').value
+        json = JSON.parse(jsonStr);
+        for (var i = 0; i < json.layer0.length; i++) {
+          find = "#tab1 g.keycap[data-keymapx=" + json.layer0[i].x + "][data-keymapy=" + json.layer0[i].y + "]";
+          $(find).attr("data-keycode", json.layer0[i].keycode);
+          $(find).children("text").text(json.layer0[i].display)
+          keymapL0[json.layer0[i].y][json.layer0[i].x] = json.layer0[i].keycode;
+
+        }
+
+        for (var i = 0; i < json.layer1.length; i++) {
+          find = "#tab2 g.keycap[data-keymapx=" + json.layer1[i].x + "][data-keymapy=" + json.layer1[i].y + "]";
+          $(find).attr("data-keycode", json.layer1[i].keycode);
+          $(find).children("text").text(json.layer1[i].display)
+          keymapL1[json.layer1[i].y][json.layer1[i].x] = json.layer1[i].keycode;
+
+        }
+
+        for (var i = 0; i < json.layer2.length; i++) {
+          find = "#tab3 g.keycap[data-keymapx=" + json.layer2[i].x + "][data-keymapy=" + json.layer2[i].y + "]";
+          $(find).attr("data-keycode", json.layer2[i].keycode);
+          $(find).children("text").text(json.layer2[i].display)
+          keymapL2[json.layer2[i].y][json.layer2[i].x] = json.layer2[i].keycode;
+
+        }
+
+        for (var i = 0; i < json.layer3.length; i++) {
+          find = "#tab4 g.keycap[data-keymapx=" + json.layer3[i].x + "][data-keymapy=" + json.layer3[i].y + "]";
+          $(find).attr("data-keycode", json.layer3[i].keycode);
+          $(find).children("text").text(json.layer3[i].display)
+          keymapL3[json.layer3[i].y][json.layer3[i].x] = json.layer3[i].keycode;
+        }
+
+        for (var i = 0; i < json.layer4.length; i++) {
+          find = "#tab5 g.keycap[data-keymapx=" + json.layer4[i].x + "][data-keymapy=" + json.layer4[i].y + "]";
+          $(find).attr("data-keycode", json.layer4[i].keycode);
+          $(find).children("text").text(json.layer4[i].display)
+          keymapL4[json.layer4[i].y][json.layer4[i].x] = json.layer4[i].keycode;
+        }
+        
+       
+    });
+  </script>
+  <style>
+    #keymaps {
+      display: none;
+    }
+
+    svg g.keycap:hover rect:nth-of-type(4) {
+      fill: #ccc !important;
+    }
+
+    svg g.keycap:hover rect:nth-of-type(2) {
+      fill: rgb(0, 191, 255);
+      stroke: rgba(0, 191, 255, 0.5);
+      stroke-width: 3;
+      transition: 300ms;
+    }
+
+    svg g.selected rect:nth-of-type(2) {
+      fill: rgb(0, 191, 255);
+      stroke: rgba(0, 191, 255, 0.5);
+      stroke-width: 3;
+    }
+
+    #select-form {
+      display: none;
+    }
+
+    #tab1 {
+      background: #eeeeec;
+    }
+
+    #tab2 {
+      background: #8ae234;
+    }
+
+    #tab3 {
+      background: #729fcf;
+    }
+
+    #tab4 {
+      background: #e9b96e;
+    }
+
+    #tab5 {
+      background: #ad7fa8;
+    }
+
+    svg>g>rect {
+      stroke: none;
+    }
+
+    #tab1>svg>g>rect {
+      fill: #eeeeec;
+    }
+
+    #tab2>svg>g>rect {
+      fill: #8ae234;
+    }
+
+    #tab3>svg>g>rect {
+      fill: #729fcf;
+    }
+
+    #tab4>svg>g>rect {
+      fill: #e9b96e;
+    }
+
+    #tab5>svg>g>rect {
+      fill: #ad7fa8;
+    }
+
+    #tab-container-1-nav>li:nth-child(1)>a {
+      background-color: #eeeeec;
+    }
+
+    #tab-container-1-nav>li:nth-child(2)>a {
+      background-color: #8ae234;
+    }
+
+    #tab-container-1-nav>li:nth-child(3)>a {
+      background-color: #729fcf;
+    }
+
+    #tab-container-1-nav>li:nth-child(4)>a {
+      background-color: #e9b96e;
+    }
+
+    #tab-container-1-nav>li:nth-child(5)>a {
+      background-color: #ad7fa8;
+    }
+
+    .yetii-tabs {
+      width: 100%;
+      margin: 0 0 20px 0;
+    }
+
+    .yetii-tabs .navigation {
+      list-style-type: none;
+      width: 100%;
+      float: left;
+      background: url(static/js/libs/pixel.gif) bottom left repeat-x;
+      margin: 0;
+      padding: 0;
+    }
+
+    .yetii-tabs .navigation li {
+      margin: 0 2px 0 0;
+      padding: 0;
+      float: left;
+    }
+
+    .yetii-tabs .navigation li a {
+      float: left;
+      display: block;
+      padding: 4px 8px;
+      border: 1px solid #ccc;
+      border-bottom: 0;
+      color: #666;
+      background: #eee;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .yetii-tabs .navigation li a:hover {
+      background: #fff;
+    }
+
+    .yetii-tabs .navigation li a.active {
+      background: #fff;
+      padding-bottom: 5px;
+      cursor: default;
+      color: #00f;
+    }
+
+    .yetii-tabs .tab,
+    .yetii-tabs .tab-nested {
+      clear: left;
+      border: 1px solid #ccc;
+      border-top: 0;
+      padding: 20px 8px;
+    }
+
+    #form_0,
+    #form_1,
+    #form_2,
+    #form_3,
+    #form_4 {
+      display: none;
+    }
+
+    #build-btn {
+      font-size: 12px;
+      line-height: 20px;
+      padding: 3px 10px;
+      vertical-align: middle;
+      border-radius: 0.25em;
+      color: #fff;
+      border-radius: 3px;
+      box-sizing: border-box;
+      background-color: #28a745;
+      background-image: -webkit-linear-gradient(270deg, #34d058 0%, #28a745 90%);
+      background-image: linear-gradient(-180deg, #34d058 0%, #28a745 90%);
+    }
+
+    #form-div {
+      width: 100%;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="header">
+    <h1>Mitosis-Plus Firmware Builder</h1>
+
+  </div>
+  <div id="tab-container-1" class="yetii-tabs">
+
+    <ul id="tab-container-1-nav" class="navigation">
+      <li><a href="#tab1" class="active">Layer 0</a></li>
+      <li><a href="#tab2">Layer 1</a></li>
+      <li><a href="#tab3">Layer 2</a></li>
+      <li><a href="#tab4">Layer 3</a></li>
+      <li><a href="#tab5">Layer 4</a></li>
+      <li><a href="#tab5">Raw data</a></li>
+    </ul>
+
+    <div class="tab" id="tab1">
+
+      <svg width="1299" height="340.5" viewBox="0 0 1299 340.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <style>
+          .keycap .border {
+            stroke: black;
+            stroke-width: 2;
+          }
+
+          .keycap .inner.border {
+            stroke: rgba(0, 0, 0, .1);
+          }
+        </style>
+        <defs>
+          <linearGradient id="DCS">
+            <stop offset="0%" stop-opacity="0"></stop>
+            <stop offset="40%" stop-opacity=".1"></stop>
+            <stop offset="60%" stop-opacity=".1"></stop>
+            <stop offset="100%" stop-opacity="0"></stop>
+          </linearGradient>
+          <linearGradient id="SPACE" x1="0%" x2="0%" y1="0%" y2="100%">
+            <stop offset="0%" stop-opacity=".1"></stop>
+            <stop offset="20%" stop-opacity="0"></stop>
+            <stop offset="40%" stop-opacity="0"></stop>
+            <stop offset="100%" stop-opacity=".1"></stop>
+          </linearGradient>
+          <radialGradient id="DSA">
+            <stop offset="0%" stop-opacity=".1"></stop>
+            <stop offset="10%" stop-opacity=".1"></stop>
+            <stop offset="100%" stop-opacity="0"></stop>
+          </radialGradient>
+          <radialGradient id="SA" xlink:href="#DSA"></radialGradient>
+        </defs>
+        <g transform="translate(10 10)">
+          <rect width="1279" height="320.5" stroke="#ddd" fill="#eee" rx="6"></rect>
+          <g class="keycap" data-keymapx="12" data-keymapy="0" transform="translate(5 5)">
+            <rect x="797.5" y="68.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="797.5" y="68.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="803.5" y="71.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="803.5" y="71.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="818.5" y="96.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="13" data-keymapy="0" transform="translate(5 5)">
+            <rect x="851.5" y="68.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="851.5" y="68.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="857.5" y="71.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="857.5" y="71.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="872.5" y="96.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="14" data-keymapy="0" transform="translate(5 5)">
+            <rect x="905.5" y="68.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="905.5" y="68.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="911.5" y="71.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="911.5" y="71.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="926.5" y="96.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="15" data-keymapy="0" transform="translate(5 5)">
+            <rect x="959.5" y="68.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="959.5" y="68.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="965.5" y="71.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="965.5" y="71.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="980.5" y="96.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="12" data-keymapy="1" transform="translate(5 5)">
+            <rect x="797.5" y="122.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="797.5" y="122.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="803.5" y="125.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="803.5" y="125.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="818.5" y="150.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="13" data-keymapy="1" transform="translate(5 5)">
+            <rect x="851.5" y="122.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="851.5" y="122.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="857.5" y="125.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="857.5" y="125.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="872.5" y="150.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="14" data-keymapy="1" transform="translate(5 5)">
+            <rect x="905.5" y="122.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="905.5" y="122.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="911.5" y="125.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="911.5" y="125.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="926.5" y="150.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="15" data-keymapy="1" transform="translate(5 5)">
+            <rect x="959.5" y="122.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="959.5" y="122.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="965.5" y="125.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="965.5" y="125.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="980.5" y="150.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="12" data-keymapy="2" transform="translate(5 5)">
+            <rect x="797.5" y="176.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="797.5" y="176.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="803.5" y="179.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="803.5" y="179.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="818.5" y="204.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="13" data-keymapy="2" transform="translate(5 5)">
+            <rect x="851.5" y="176.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="851.5" y="176.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="857.5" y="179.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="857.5" y="179.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="872.5" y="204.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="14" data-keymapy="2" transform="translate(5 5)">
+            <rect x="905.5" y="176.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="905.5" y="176.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="911.5" y="179.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="911.5" y="179.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="926.5" y="204.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="15" data-keymapy="2" transform="translate(5 5)">
+            <rect x="959.5" y="176.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="959.5" y="176.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="965.5" y="179.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="965.5" y="179.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="980.5" y="204.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="12" data-keymapy="4" transform="translate(5 5)">
+            <rect x="1162" y="176.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="1162" y="176.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="1168" y="179.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="1168" y="179.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="1183" y="204.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="13" data-keymapy="4" transform="translate(5 5)">
+            <rect x="1216" y="176.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="1216" y="176.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="1222" y="179.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="1222" y="179.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="1237" y="204.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="2" data-keymapy="3" transform="translate(5 5)">
+            <rect x="95.5" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="95.5" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="101.5" y="206.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="101.5" y="206.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="116.5" y="231.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="3" data-keymapy="3" transform="translate(5 5)">
+            <rect x="149.5" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="149.5" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="155.5" y="206.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="155.5" y="206.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="170.5" y="231.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="4" data-keymapy="3" transform="translate(5 5)">
+            <rect x="203.5" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="203.5" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="209.5" y="206.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="209.5" y="206.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="224.5" y="231.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="5" data-keymapy="3" transform="translate(5 5)">
+            <rect x="257.5" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="257.5" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="263.5" y="206.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="263.5" y="206.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="278.5" y="231.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="6" data-keymapy="3" transform="translate(5 5)">
+            <rect x="379" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="379" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="385" y="206.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="385" y="206.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="400" y="231.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="7" data-keymapy="3" transform="translate(5 5)">
+            <rect x="433" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="433" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="439" y="206.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="439" y="206.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="454" y="231.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="8" data-keymapy="3" transform="translate(5 5)">
+            <rect x="487" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="487" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="493" y="206.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="493" y="206.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="508" y="231.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="9" data-keymapy="3" transform="translate(5 5)">
+            <rect x="541" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="541" y="203.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="547" y="206.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="547" y="206.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="562" y="231.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="12" data-keymapy="3" transform="translate(5 5)">
+            <rect x="797.5" y="230.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="797.5" y="230.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="803.5" y="233.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="803.5" y="233.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="818.5" y="258.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="13" data-keymapy="3" transform="translate(5 5)">
+            <rect x="851.5" y="230.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="851.5" y="230.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="857.5" y="233.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="857.5" y="233.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="872.5" y="258.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="14" data-keymapy="3" transform="translate(5 5)">
+            <rect x="905.5" y="230.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="905.5" y="230.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="911.5" y="233.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="911.5" y="233.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="926.5" y="258.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="15" data-keymapy="3" transform="translate(5 5)">
+            <rect x="959.5" y="230.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="959.5" y="230.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="965.5" y="233.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="965.5" y="233.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="980.5" y="258.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="14" data-keymapy="4" transform="translate(5 5)">
+            <rect x="1108" y="230.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="1108" y="230.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="1114" y="233.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="1114" y="233.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="1129" y="258.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="15" data-keymapy="4" transform="translate(5 5)">
+            <rect x="1162" y="230.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="1162" y="230.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="1168" y="233.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="1168" y="233.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="1183" y="258.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="16" data-keymapy="4" transform="translate(5 5)">
+            <rect x="1216" y="230.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="1216" y="230.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="1222" y="233.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="1222" y="233.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="1237" y="258.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="2" data-keymapy="4" transform="translate(5 5)">
+            <rect x="95.5" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="95.5" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="101.5" y="260.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="101.5" y="260.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="116.5" y="285.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="3" data-keymapy="4" transform="translate(5 5)">
+            <rect x="149.5" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="149.5" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="155.5" y="260.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="155.5" y="260.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="170.5" y="285.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="4" data-keymapy="4" transform="translate(5 5)">
+            <rect x="203.5" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="203.5" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="209.5" y="260.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="209.5" y="260.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="224.5" y="285.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="5" data-keymapy="4" transform="translate(5 5)">
+            <rect x="257.5" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="257.5" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="263.5" y="260.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="263.5" y="260.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="278.5" y="285.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="6" data-keymapy="4" transform="translate(5 5)">
+            <rect x="379" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="379" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="385" y="260.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="385" y="260.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="400" y="285.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="8" data-keymapy="4" transform="translate(5 5)">
+            <rect x="433" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="433" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="439" y="260.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="439" y="260.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="454" y="285.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="9" data-keymapy="4" transform="translate(5 5)">
+            <rect x="487" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="487" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="493" y="260.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="493" y="260.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="508" y="285.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" data-keymapx="10" data-keymapy="4" transform="translate(5 5)">
+            <rect x="541" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="541" y="257.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="547" y="260.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="547" y="260.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="562" y="285.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(5.8 -46.85 51.85)" data-keymapx="3" data-keymapy="0">
+            <rect x="149.5" y="1" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="149.5" y="1" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="155.5" y="4" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="155.5" y="4" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="170.5" y="29" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(5.8 -46.85 51.85)" data-keymapx="5" data-keymapy="0">
+            <rect x="257.5" y="6.4" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="257.5" y="6.4" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="263.5" y="9.4" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="263.5" y="9.4" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="278.5" y="34.4" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(5.8 -46.85 51.85)" data-keymapx="2" data-keymapy="0">
+            <rect x="95.5" y="14.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="95.5" y="14.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="101.5" y="17.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="101.5" y="17.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="116.5" y="42.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(5.8 -46.85 51.85)" data-keymapx="4" data-keymapy="0">
+            <rect x="203.5" y="14.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="203.5" y="14.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="209.5" y="17.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="209.5" y="17.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="224.5" y="42.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(5.8 -46.85 51.85)" data-keymapx="1" data-keymapy="0">
+            <rect x="41.5" y="41.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="41.5" y="41.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="47.5" y="44.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="47.5" y="44.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="62.5" y="69.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(5.8 -46.85 51.85)" data-keymapx="3" data-keymapy="1">
+            <rect x="149.5" y="55" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="149.5" y="55" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="155.5" y="58" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="155.5" y="58" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="170.5" y="83" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(5.8 -46.85 51.85)" data-keymapx="5" data-keymapy="1">
+            <rect x="257.5" y="60.4" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="257.5" y="60.4" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="263.5" y="63.4" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="263.5" y="63.4" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="278.5" y="88.4" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(5.8 -46.85 51.85)" data-keymapx="2" data-keymapy="1">
+            <rect x="95.5" y="68.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="95.5" y="68.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="101.5" y="71.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="101.5" y="71.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="116.5" y="96.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(5.8 -46.85 51.85)" data-keymapx="4" data-keymapy="1">
+            <rect x="203.5" y="68.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="203.5" y="68.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="209.5" y="71.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="209.5" y="71.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="224.5" y="96.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(5.8 -46.85 51.85)" data-keymapx="1" data-keymapy="1">
+            <rect x="41.5" y="95.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="41.5" y="95.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="47.5" y="98.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="47.5" y="98.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="62.5" y="123.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(5.8 -46.85 51.85)" data-keymapx="3" data-keymapy="2">
+            <rect x="149.5" y="109" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="149.5" y="109" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="155.5" y="112" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="155.5" y="112" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="170.5" y="137" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(5.8 -46.85 51.85)" data-keymapx="5" data-keymapy="2">
+            <rect x="257.5" y="114.4" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="257.5" y="114.4" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="263.5" y="117.4" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="263.5" y="117.4" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="278.5" y="142.4" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(5.8 -46.85 51.85)" data-keymapx="2" data-keymapy="2">
+            <rect x="95.5" y="122.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="95.5" y="122.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="101.5" y="125.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="101.5" y="125.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="116.5" y="150.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(5.8 -46.85 51.85)" data-keymapx="4" data-keymapy="2">
+            <rect x="203.5" y="122.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="203.5" y="122.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="209.5" y="125.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="209.5" y="125.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="224.5" y="150.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(5.8 -46.85 51.85)" data-keymapx="1" data-keymapy="2">
+            <rect x="41.5" y="149.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="41.5" y="149.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="47.5" y="152.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="47.5" y="152.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="62.5" y="177.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(-5.8 51.85 -46.85)" data-keymapx="8" data-keymapy="0">
+            <rect x="487" y="68.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="487" y="68.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="493" y="71.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="493" y="71.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="508" y="96.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(-5.8 51.85 -46.85)" data-keymapx="6" data-keymapy="0">
+            <rect x="379" y="76.6" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="379" y="76.6" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="385" y="79.6" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="385" y="79.6" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="400" y="104.6" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(-5.8 51.85 -46.85)" data-keymapx="9" data-keymapy="0">
+            <rect x="541" y="82" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="541" y="82" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="547" y="85" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="547" y="85" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="562" y="110" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(-5.8 51.85 -46.85)" data-keymapx="7" data-keymapy="0">
+            <rect x="433" y="84.7" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="433" y="84.7" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="439" y="87.7" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="439" y="87.7" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="454" y="112.7" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(-5.8 51.85 -46.85)" data-keymapx="10" data-keymapy="0">
+            <rect x="595" y="109" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="595" y="109" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="601" y="112" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="601" y="112" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="616" y="137" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(-5.8 51.85 -46.85)" data-keymapx="8" data-keymapy="1">
+            <rect x="487" y="122.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="487" y="122.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="493" y="125.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="493" y="125.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="508" y="150.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(-5.8 51.85 -46.85)" data-keymapx="6" data-keymapy="1">
+            <rect x="379" y="130.6" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="379" y="130.6" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="385" y="133.6" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="385" y="133.6" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="400" y="158.6" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(-5.8 51.85 -46.85)" data-keymapx="9" data-keymapy="1">
+            <rect x="541" y="136" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="541" y="136" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="547" y="139" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="547" y="139" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="562" y="164" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(-5.8 51.85 -46.85)" data-keymapx="7" data-keymapy="1">
+            <rect x="433" y="138.7" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="433" y="138.7" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="439" y="141.7" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="439" y="141.7" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="454" y="166.7" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(-5.8 51.85 -46.85)" data-keymapx="10" data-keymapy="1">
+            <rect x="595" y="163" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="595" y="163" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="601" y="166" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="601" y="166" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="616" y="191" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(-5.8 51.85 -46.85)" data-keymapx="8" data-keymapy="2">
+            <rect x="487" y="176.5" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="487" y="176.5" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="493" y="179.5" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="493" y="179.5" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="508" y="204.5" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(-5.8 51.85 -46.85)" data-keymapx="6" data-keymapy="2">
+            <rect x="379" y="184.6" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="379" y="184.6" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="385" y="187.6" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="385" y="187.6" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="400" y="212.6" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(-5.8 51.85 -46.85)" data-keymapx="9" data-keymapy="2">
+            <rect x="541" y="190" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="541" y="190" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="547" y="193" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="547" y="193" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="562" y="218" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(-5.8 51.85 -46.85)" data-keymapx="7" data-keymapy="2">
+            <rect x="433" y="192.7" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="433" y="192.7" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="439" y="195.7" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="439" y="195.7" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="454" y="220.7" width="40" height="40"></text>
+          </g>
+          <g class="keycap" transform="rotate(-5.8 51.85 -46.85)" data-keymapx="10" data-keymapy="2">
+            <rect x="595" y="217" width="52" height="52" rx="5" fill="#f7f2ea" class="outer border"></rect>
+            <rect x="595" y="217" width="52" height="52" rx="5" fill="#f7f2ea"></rect>
+            <rect x="601" y="220" width="40" height="40" rx="5" fill="#fffef6" class="inner border"></rect>
+            <rect x="601" y="220" width="40" height="40" rx="5" fill="#fffef6"></rect>
+            <text x="616" y="245" width="40" height="40"></text>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <div class="tab" id="tab2">
+
+
+    </div>
+    <div class="tab" id="tab3">
+
+
+    </div>
+    <div class="tab" id="tab4">
+
+    </div>
+    <div class="tab" id="tab5">
+
+
+    </div>
+    <div class="tab" id="tab6">
+      <textarea name="json1" id="json1" cols="30" rows="10" style="margin: 0px; width: 1319px; height: 339px;">{"keyboard":"mitosis-plus","version":"1.0","layer0":[{"x":12,"y":0,"keycode":"KC_P7","display":"P7"},{"x":13,"y":0,"keycode":"KC_P8","display":"P8"},{"x":14,"y":0,"keycode":"KC_P9","display":"P9"},{"x":15,"y":0,"keycode":"KC_PPLS","display":"P+"},{"x":12,"y":1,"keycode":"KC_P4","display":"P4"},{"x":13,"y":1,"keycode":"KC_P5","display":"P5"},{"x":14,"y":1,"keycode":"KC_P6","display":"P6"},{"x":15,"y":1,"keycode":"KC_PMNS","display":"P-"},{"x":12,"y":2,"keycode":"KC_P1","display":"P1"},{"x":13,"y":2,"keycode":"KC_P2","display":"P2"},{"x":14,"y":2,"keycode":"KC_P3","display":"P3"},{"x":15,"y":2,"keycode":"KC_PAST","display":"P*"},{"x":12,"y":4,"keycode":"KC_NO","display":""},{"x":13,"y":4,"keycode":"KC_NO","display":""},{"x":2,"y":3,"keycode":"KC_LSFT","display":"LShift"},{"x":3,"y":3,"keycode":"KC_ESC","display":"Esc"},{"x":4,"y":3,"keycode":"KC_LGUI","display":"LGui"},{"x":5,"y":3,"keycode":"KC_TAB","display":"Tab"},{"x":6,"y":3,"keycode":"KC_MINS","display":"-"},{"x":7,"y":3,"keycode":"KC_SCLN","display":";"},{"x":8,"y":3,"keycode":"KC_UP","display":"Up"},{"x":9,"y":3,"keycode":"KC_DEL","display":"Del"},{"x":12,"y":3,"keycode":"LT(3,KC_P0)","display":"P0"},{"x":13,"y":3,"keycode":"KC_PENT","display":"Enter"},{"x":14,"y":3,"keycode":"KC_PDOT","display":"P."},{"x":15,"y":3,"keycode":"KC_PSLS","display":"P/"},{"x":14,"y":4,"keycode":"KC_NO","display":""},{"x":15,"y":4,"keycode":"KC_NO","display":""},{"x":16,"y":4,"keycode":"KC_NO","display":""},{"x":2,"y":4,"keycode":"KC_LCTL","display":"LCtrl"},{"x":3,"y":4,"keycode":"KC_LALT","display":"LAlt"},{"x":4,"y":4,"keycode":"KC_BSPC","display":"BS"},{"x":5,"y":4,"keycode":"LT(1,KC_SPC)","display":"Space"},{"x":6,"y":4,"keycode":"LT(2,KC_EQL)","display":"="},{"x":8,"y":4,"keycode":"KC_LEFT","display":"Left"},{"x":9,"y":4,"keycode":"KC_DOWN","display":"Down"},{"x":10,"y":4,"keycode":"KC_RGHT","display":"Right"},{"x":3,"y":0,"keycode":"KC_E","display":"E"},{"x":5,"y":0,"keycode":"KC_T","display":"T"},{"x":2,"y":0,"keycode":"KC_W","display":"W"},{"x":4,"y":0,"keycode":"KC_R","display":"R"},{"x":1,"y":0,"keycode":"KC_Q","display":"Q"},{"x":3,"y":1,"keycode":"KC_D","display":"D"},{"x":5,"y":1,"keycode":"KC_G","display":"G"},{"x":2,"y":1,"keycode":"KC_S","display":"S"},{"x":4,"y":1,"keycode":"KC_F","display":"F"},{"x":1,"y":1,"keycode":"KC_A","display":"A"},{"x":3,"y":2,"keycode":"KC_C","display":"C"},{"x":5,"y":2,"keycode":"KC_B","display":"B"},{"x":2,"y":2,"keycode":"KC_X","display":"X"},{"x":4,"y":2,"keycode":"KC_V","display":"V"},{"x":1,"y":2,"keycode":"KC_Z","display":"Z"},{"x":8,"y":0,"keycode":"KC_I","display":"I"},{"x":6,"y":0,"keycode":"KC_Y","display":"Y"},{"x":9,"y":0,"keycode":"KC_O","display":"O"},{"x":7,"y":0,"keycode":"KC_U","display":"U"},{"x":10,"y":0,"keycode":"KC_P","display":"P"},{"x":8,"y":1,"keycode":"KC_K","display":"K"},{"x":6,"y":1,"keycode":"KC_H","display":"H"},{"x":9,"y":1,"keycode":"KC_L","display":"L"},{"x":7,"y":1,"keycode":"KC_J","display":"J"},{"x":10,"y":1,"keycode":"KC_ENT","display":"Enter"},{"x":8,"y":2,"keycode":"KC_COMM","display":","},{"x":6,"y":2,"keycode":"KC_N","display":"N"},{"x":9,"y":2,"keycode":"KC_DOT","display":"."},{"x":7,"y":2,"keycode":"KC_M","display":"M"},{"x":10,"y":2,"keycode":"KC_SLSH","display":"/"}],"layer1":[{"x":12,"y":0,"keycode":"KC_TRNS","display":""},{"x":13,"y":0,"keycode":"KC_TRNS","display":""},{"x":14,"y":0,"keycode":"KC_TRNS","display":""},{"x":15,"y":0,"keycode":"KC_TRNS","display":""},{"x":12,"y":1,"keycode":"KC_TRNS","display":""},{"x":13,"y":1,"keycode":"KC_TRNS","display":""},{"x":14,"y":1,"keycode":"KC_TRNS","display":""},{"x":15,"y":1,"keycode":"KC_TRNS","display":""},{"x":12,"y":2,"keycode":"KC_TRNS","display":""},{"x":13,"y":2,"keycode":"KC_TRNS","display":""},{"x":14,"y":2,"keycode":"KC_TRNS","display":""},{"x":15,"y":2,"keycode":"KC_TRNS","display":""},{"x":12,"y":4,"keycode":"KC_TRNS","display":""},{"x":13,"y":4,"keycode":"KC_TRNS","display":""},{"x":2,"y":3,"keycode":"KC_TRNS","display":""},{"x":3,"y":3,"keycode":"KC_NUHS","display":"`"},{"x":4,"y":3,"keycode":"KC_TRNS","display":""},{"x":5,"y":3,"keycode":"KC_TRNS","display":""},{"x":6,"y":3,"keycode":"KC_TRNS","display":""},{"x":7,"y":3,"keycode":"KC_TRNS","display":""},{"x":8,"y":3,"keycode":"KC_TRNS","display":""},{"x":9,"y":3,"keycode":"KC_TRNS","display":""},{"x":12,"y":3,"keycode":"KC_TRNS","display":""},{"x":13,"y":3,"keycode":"KC_TRNS","display":""},{"x":14,"y":3,"keycode":"KC_TRNS","display":""},{"x":15,"y":3,"keycode":"KC_TRNS","display":""},{"x":14,"y":4,"keycode":"KC_TRNS","display":""},{"x":15,"y":4,"keycode":"KC_TRNS","display":""},{"x":16,"y":4,"keycode":"KC_TRNS","display":""},{"x":2,"y":4,"keycode":"KC_TRNS","display":""},{"x":3,"y":4,"keycode":"KC_TRNS","display":""},{"x":4,"y":4,"keycode":"KC_TRNS","display":""},{"x":5,"y":4,"keycode":"KC_TRNS","display":""},{"x":6,"y":4,"keycode":"KC_TRNS","display":""},{"x":8,"y":4,"keycode":"KC_TRNS","display":""},{"x":9,"y":4,"keycode":"KC_TRNS","display":""},{"x":10,"y":4,"keycode":"KC_TRNS","display":""},{"x":3,"y":0,"keycode":"KC_3","display":"3"},{"x":5,"y":0,"keycode":"KC_5","display":"5"},{"x":2,"y":0,"keycode":"KC_2","display":"2"},{"x":4,"y":0,"keycode":"KC_4","display":"4"},{"x":1,"y":0,"keycode":"KC_1","display":"1"},{"x":3,"y":1,"keycode":"KC_TRNS","display":""},{"x":5,"y":1,"keycode":"KC_TRNS","display":""},{"x":2,"y":1,"keycode":"KC_TRNS","display":""},{"x":4,"y":1,"keycode":"KC_TRNS","display":""},{"x":1,"y":1,"keycode":"KC_TRNS","display":""},{"x":3,"y":2,"keycode":"KC_TRNS","display":""},{"x":5,"y":2,"keycode":"KC_TRNS","display":""},{"x":2,"y":2,"keycode":"KC_TRNS","display":""},{"x":4,"y":2,"keycode":"KC_TRNS","display":""},{"x":1,"y":2,"keycode":"KC_TRNS","display":""},{"x":8,"y":0,"keycode":"KC_8","display":"8"},{"x":6,"y":0,"keycode":"KC_6","display":"6"},{"x":9,"y":0,"keycode":"KC_9","display":"9"},{"x":7,"y":0,"keycode":"KC_7","display":"7"},{"x":10,"y":0,"keycode":"KC_0","display":"0"},{"x":8,"y":1,"keycode":"KC_LBRC","display":"["},{"x":6,"y":1,"keycode":"KC_MINS","display":"-"},{"x":9,"y":1,"keycode":"KC_RBRC","display":"]"},{"x":7,"y":1,"keycode":"KC_EQL","display":"="},{"x":10,"y":1,"keycode":"KC_BSLS","display":"\\"},{"x":8,"y":2,"keycode":"KC_TRNS","display":""},{"x":6,"y":2,"keycode":"KC_TRNS","display":""},{"x":9,"y":2,"keycode":"KC_TRNS","display":""},{"x":7,"y":2,"keycode":"KC_TRNS","display":""},{"x":10,"y":2,"keycode":"KC_TRNS","display":""}],"layer2":[{"x":12,"y":0,"keycode":"KC_TRNS","display":""},{"x":13,"y":0,"keycode":"KC_TRNS","display":""},{"x":14,"y":0,"keycode":"KC_TRNS","display":""},{"x":15,"y":0,"keycode":"KC_TRNS","display":""},{"x":12,"y":1,"keycode":"KC_TRNS","display":""},{"x":13,"y":1,"keycode":"KC_TRNS","display":""},{"x":14,"y":1,"keycode":"KC_TRNS","display":""},{"x":15,"y":1,"keycode":"KC_TRNS","display":""},{"x":12,"y":2,"keycode":"KC_TRNS","display":""},{"x":13,"y":2,"keycode":"KC_TRNS","display":""},{"x":14,"y":2,"keycode":"KC_TRNS","display":""},{"x":15,"y":2,"keycode":"KC_TRNS","display":""},{"x":12,"y":4,"keycode":"KC_TRNS","display":""},{"x":13,"y":4,"keycode":"KC_TRNS","display":""},{"x":2,"y":3,"keycode":"KC_TRNS","display":""},{"x":3,"y":3,"keycode":"KC_TRNS","display":""},{"x":4,"y":3,"keycode":"KC_TRNS","display":""},{"x":5,"y":3,"keycode":"KC_TRNS","display":""},{"x":6,"y":3,"keycode":"KC_TRNS","display":""},{"x":7,"y":3,"keycode":"KC_TRNS","display":""},{"x":8,"y":3,"keycode":"KC_TRNS","display":""},{"x":9,"y":3,"keycode":"KC_TRNS","display":""},{"x":12,"y":3,"keycode":"KC_TRNS","display":""},{"x":13,"y":3,"keycode":"KC_TRNS","display":""},{"x":14,"y":3,"keycode":"KC_TRNS","display":""},{"x":15,"y":3,"keycode":"KC_TRNS","display":""},{"x":14,"y":4,"keycode":"KC_TRNS","display":""},{"x":15,"y":4,"keycode":"KC_TRNS","display":""},{"x":16,"y":4,"keycode":"KC_TRNS","display":""},{"x":2,"y":4,"keycode":"KC_TRNS","display":""},{"x":3,"y":4,"keycode":"KC_TRNS","display":""},{"x":4,"y":4,"keycode":"KC_TRNS","display":""},{"x":5,"y":4,"keycode":"KC_TRNS","display":""},{"x":6,"y":4,"keycode":"KC_TRNS","display":""},{"x":8,"y":4,"keycode":"KC_TRNS","display":""},{"x":9,"y":4,"keycode":"KC_TRNS","display":""},{"x":10,"y":4,"keycode":"KC_TRNS","display":""},{"x":3,"y":0,"keycode":"KC_F3","display":"F3"},{"x":5,"y":0,"keycode":"KC_F5","display":"F5"},{"x":2,"y":0,"keycode":"KC_F2","display":"F2"},{"x":4,"y":0,"keycode":"KC_F4","display":"F4"},{"x":1,"y":0,"keycode":"KC_F1","display":"F1"},{"x":3,"y":1,"keycode":"KC_TRNS","display":""},{"x":5,"y":1,"keycode":"KC_TRNS","display":""},{"x":2,"y":1,"keycode":"KC_TRNS","display":""},{"x":4,"y":1,"keycode":"KC_TRNS","display":""},{"x":1,"y":1,"keycode":"KC_CAPS","display":"Caps"},{"x":3,"y":2,"keycode":"KC_TRNS","display":""},{"x":5,"y":2,"keycode":"KC_TRNS","display":""},{"x":2,"y":2,"keycode":"KC_TRNS","display":""},{"x":4,"y":2,"keycode":"KC_TRNS","display":""},{"x":1,"y":2,"keycode":"KC_TRNS","display":""},{"x":8,"y":0,"keycode":"KC_F8","display":"F8"},{"x":6,"y":0,"keycode":"KC_F6","display":"F6"},{"x":9,"y":0,"keycode":"KC_F9","display":"F9"},{"x":7,"y":0,"keycode":"KC_F7","display":"F7"},{"x":10,"y":0,"keycode":"KC_F10","display":"F10"},{"x":8,"y":1,"keycode":"KC_TRNS","display":""},{"x":6,"y":1,"keycode":"KC_TRNS","display":""},{"x":9,"y":1,"keycode":"KC_F11","display":"F11"},{"x":7,"y":1,"keycode":"KC_TRNS","display":""},{"x":10,"y":1,"keycode":"KC_F12","display":"F12"},{"x":8,"y":2,"keycode":"KC_TRNS","display":""},{"x":6,"y":2,"keycode":"KC_TRNS","display":""},{"x":9,"y":2,"keycode":"KC_TRNS","display":""},{"x":7,"y":2,"keycode":"KC_TRNS","display":""},{"x":10,"y":2,"keycode":"KC_TRNS","display":""}],"layer3":[{"x":12,"y":0,"keycode":"KC_NLCK","display":"NmLk"},{"x":13,"y":0,"keycode":"KC_VOLU","display":"VolUp"},{"x":14,"y":0,"keycode":"KC_TRNS","display":""},{"x":15,"y":0,"keycode":"KC_TRNS","display":""},{"x":12,"y":1,"keycode":"KC_MPRV","display":"Prev"},{"x":13,"y":1,"keycode":"KC_MPLY","display":"Play"},{"x":14,"y":1,"keycode":"KC_MNXT","display":"Next"},{"x":15,"y":1,"keycode":"KC_TRNS","display":""},{"x":12,"y":2,"keycode":"KC_TRNS","display":""},{"x":13,"y":2,"keycode":"KC_VOLD","display":"VolDn"},{"x":14,"y":2,"keycode":"KC_TRNS","display":""},{"x":15,"y":2,"keycode":"KC_TRNS","display":""},{"x":12,"y":4,"keycode":"KC_TRNS","display":""},{"x":13,"y":4,"keycode":"KC_TRNS","display":""},{"x":2,"y":3,"keycode":"KC_TRNS","display":""},{"x":3,"y":3,"keycode":"KC_TRNS","display":""},{"x":4,"y":3,"keycode":"KC_TRNS","display":""},{"x":5,"y":3,"keycode":"KC_TRNS","display":""},{"x":6,"y":3,"keycode":"KC_TRNS","display":""},{"x":7,"y":3,"keycode":"KC_TRNS","display":""},{"x":8,"y":3,"keycode":"KC_TRNS","display":""},{"x":9,"y":3,"keycode":"KC_TRNS","display":""},{"x":12,"y":3,"keycode":"KC_TRNS","display":""},{"x":13,"y":3,"keycode":"KC_MUTE","display":"Mute"},{"x":14,"y":3,"keycode":"KC_TRNS","display":""},{"x":15,"y":3,"keycode":"KC_TRNS","display":""},{"x":14,"y":4,"keycode":"KC_TRNS","display":""},{"x":15,"y":4,"keycode":"KC_TRNS","display":""},{"x":16,"y":4,"keycode":"KC_TRNS","display":""},{"x":2,"y":4,"keycode":"KC_TRNS","display":""},{"x":3,"y":4,"keycode":"KC_TRNS","display":""},{"x":4,"y":4,"keycode":"KC_TRNS","display":""},{"x":5,"y":4,"keycode":"KC_TRNS","display":""},{"x":6,"y":4,"keycode":"KC_TRNS","display":""},{"x":8,"y":4,"keycode":"KC_TRNS","display":""},{"x":9,"y":4,"keycode":"KC_TRNS","display":""},{"x":10,"y":4,"keycode":"KC_TRNS","display":""},{"x":3,"y":0,"keycode":"KC_TRNS","display":""},{"x":5,"y":0,"keycode":"KC_TRNS","display":""},{"x":2,"y":0,"keycode":"KC_TRNS","display":""},{"x":4,"y":0,"keycode":"KC_TRNS","display":""},{"x":1,"y":0,"keycode":"KC_TRNS","display":""},{"x":3,"y":1,"keycode":"KC_TRNS","display":""},{"x":5,"y":1,"keycode":"KC_TRNS","display":""},{"x":2,"y":1,"keycode":"KC_TRNS","display":""},{"x":4,"y":1,"keycode":"KC_TRNS","display":""},{"x":1,"y":1,"keycode":"KC_TRNS","display":""},{"x":3,"y":2,"keycode":"KC_TRNS","display":""},{"x":5,"y":2,"keycode":"KC_TRNS","display":""},{"x":2,"y":2,"keycode":"KC_TRNS","display":""},{"x":4,"y":2,"keycode":"KC_TRNS","display":""},{"x":1,"y":2,"keycode":"KC_TRNS","display":""},{"x":8,"y":0,"keycode":"KC_TRNS","display":""},{"x":6,"y":0,"keycode":"KC_TRNS","display":""},{"x":9,"y":0,"keycode":"KC_TRNS","display":""},{"x":7,"y":0,"keycode":"KC_TRNS","display":""},{"x":10,"y":0,"keycode":"KC_TRNS","display":""},{"x":8,"y":1,"keycode":"KC_TRNS","display":""},{"x":6,"y":1,"keycode":"KC_TRNS","display":""},{"x":9,"y":1,"keycode":"KC_TRNS","display":""},{"x":7,"y":1,"keycode":"KC_TRNS","display":""},{"x":10,"y":1,"keycode":"KC_TRNS","display":""},{"x":8,"y":2,"keycode":"KC_TRNS","display":""},{"x":6,"y":2,"keycode":"KC_TRNS","display":""},{"x":9,"y":2,"keycode":"KC_TRNS","display":""},{"x":7,"y":2,"keycode":"KC_TRNS","display":""},{"x":10,"y":2,"keycode":"KC_TRNS","display":""}],"layer4":[{"x":12,"y":0,"keycode":"KC_TRNS","display":""},{"x":13,"y":0,"keycode":"KC_TRNS","display":""},{"x":14,"y":0,"keycode":"KC_TRNS","display":""},{"x":15,"y":0,"keycode":"KC_TRNS","display":""},{"x":12,"y":1,"keycode":"KC_TRNS","display":""},{"x":13,"y":1,"keycode":"KC_TRNS","display":""},{"x":14,"y":1,"keycode":"KC_TRNS","display":""},{"x":15,"y":1,"keycode":"KC_TRNS","display":""},{"x":12,"y":2,"keycode":"KC_TRNS","display":""},{"x":13,"y":2,"keycode":"KC_TRNS","display":""},{"x":14,"y":2,"keycode":"KC_TRNS","display":""},{"x":15,"y":2,"keycode":"KC_TRNS","display":""},{"x":12,"y":4,"keycode":"KC_TRNS","display":""},{"x":13,"y":4,"keycode":"KC_TRNS","display":""},{"x":2,"y":3,"keycode":"KC_TRNS","display":""},{"x":3,"y":3,"keycode":"KC_TRNS","display":""},{"x":4,"y":3,"keycode":"KC_TRNS","display":""},{"x":5,"y":3,"keycode":"KC_TRNS","display":""},{"x":6,"y":3,"keycode":"KC_TRNS","display":""},{"x":7,"y":3,"keycode":"KC_TRNS","display":""},{"x":8,"y":3,"keycode":"KC_TRNS","display":""},{"x":9,"y":3,"keycode":"KC_TRNS","display":""},{"x":12,"y":3,"keycode":"KC_TRNS","display":""},{"x":13,"y":3,"keycode":"KC_TRNS","display":""},{"x":14,"y":3,"keycode":"KC_TRNS","display":""},{"x":15,"y":3,"keycode":"KC_TRNS","display":""},{"x":14,"y":4,"keycode":"KC_TRNS","display":""},{"x":15,"y":4,"keycode":"KC_TRNS","display":""},{"x":16,"y":4,"keycode":"KC_TRNS","display":""},{"x":2,"y":4,"keycode":"KC_TRNS","display":""},{"x":3,"y":4,"keycode":"KC_TRNS","display":""},{"x":4,"y":4,"keycode":"KC_TRNS","display":""},{"x":5,"y":4,"keycode":"KC_TRNS","display":""},{"x":6,"y":4,"keycode":"KC_TRNS","display":""},{"x":8,"y":4,"keycode":"KC_TRNS","display":""},{"x":9,"y":4,"keycode":"KC_TRNS","display":""},{"x":10,"y":4,"keycode":"KC_TRNS","display":""},{"x":3,"y":0,"keycode":"KC_TRNS","display":""},{"x":5,"y":0,"keycode":"KC_TRNS","display":""},{"x":2,"y":0,"keycode":"KC_TRNS","display":""},{"x":4,"y":0,"keycode":"KC_TRNS","display":""},{"x":1,"y":0,"keycode":"KC_TRNS","display":""},{"x":3,"y":1,"keycode":"KC_TRNS","display":""},{"x":5,"y":1,"keycode":"KC_TRNS","display":""},{"x":2,"y":1,"keycode":"KC_TRNS","display":""},{"x":4,"y":1,"keycode":"KC_TRNS","display":""},{"x":1,"y":1,"keycode":"KC_TRNS","display":""},{"x":3,"y":2,"keycode":"KC_TRNS","display":""},{"x":5,"y":2,"keycode":"KC_TRNS","display":""},{"x":2,"y":2,"keycode":"KC_TRNS","display":""},{"x":4,"y":2,"keycode":"KC_TRNS","display":""},{"x":1,"y":2,"keycode":"KC_TRNS","display":""},{"x":8,"y":0,"keycode":"KC_TRNS","display":""},{"x":6,"y":0,"keycode":"KC_TRNS","display":""},{"x":9,"y":0,"keycode":"KC_TRNS","display":""},{"x":7,"y":0,"keycode":"KC_TRNS","display":""},{"x":10,"y":0,"keycode":"KC_TRNS","display":""},{"x":8,"y":1,"keycode":"KC_TRNS","display":""},{"x":6,"y":1,"keycode":"KC_TRNS","display":""},{"x":9,"y":1,"keycode":"KC_TRNS","display":""},{"x":7,"y":1,"keycode":"KC_TRNS","display":""},{"x":10,"y":1,"keycode":"KC_TRNS","display":""},{"x":8,"y":2,"keycode":"KC_TRNS","display":""},{"x":6,"y":2,"keycode":"KC_TRNS","display":""},{"x":9,"y":2,"keycode":"KC_TRNS","display":""},{"x":7,"y":2,"keycode":"KC_TRNS","display":""},{"x":10,"y":2,"keycode":"KC_TRNS","display":""}]}</textarea>
+
+    </div>
+
+  </div>
+
+
+  <div id="select-form">
+    <p>
+      <select id="keycode-select">
+</select> | keycode:<input id="keycode-edit" type="text" value="" /> (welcome to modify)
+      <div id="LT">
+        Hold for layer( QMK LT(layer,keycode) ):
+
+        <input type="radio" name="rLT" value="LT0">L0
+        <input type="radio" name="rLT" value="LT1">L1
+        <input type="radio" name="rLT" value="LT2">L2
+        <input type="radio" name="rLT" value="LT3">L3
+        <input type="radio" name="rLT" value="LT4">L4
+      </div>
+      <input type="button" value="Set this key." id="set-keycode">
+    </p>
+  </div>
+  <div id="form-div">
+    <form action="/make/mitosis-plus" method="POST" id="makeform">
+      <textarea name="layer0" id="form_0"></textarea>
+      <textarea name="layer1" id="form_1"></textarea>
+      <textarea name="layer2" id="form_2"></textarea>
+      <textarea name="layer3" id="form_3"></textarea>
+      <textarea name="layer4" id="form_4"></textarea>
+      <input type="submit" value="Build &amp; Download" id="build-btn">
+    </form>
+  </div>
+
+
+</body>
+
+</html>
